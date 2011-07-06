@@ -1,0 +1,6 @@
+# What's this
+This is designed to be a drop-to-use Weibo Share-Only Utility.
+It is about to be done.
+
+# Credits
+Thanks to JimLiu / WeiboSDK, and people who build some components I don't know where they come from, you can find their names at the top of the files.

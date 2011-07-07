@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define kTagTextView 0x1234
+#define kTagLabel 0x1235
 
 static ShareToCNBox *sharedBox = nil;
 
@@ -75,6 +76,9 @@ static const int kFontSize = 14.0f;
 
 - (void)showKeyboard;
 - (void)hideKeyboard;
+
+- (int)charCountOfString:(NSString *)string;
+- (NSString *)trimString:(NSString *)string toCharCount:(int)charCount;
 
 @end
 
@@ -140,6 +144,7 @@ static const int kFontSize = 14.0f;
         label.shadowColor = [UIColor blackColor];
         label.text = [NSString stringWithFormat:@"%d", self.maxUnitCount];
         label.backgroundColor = [UIColor clearColor];
+        label.tag = kTagLabel;
         [_containerView addSubview:label];
         [label release];
         
@@ -178,6 +183,7 @@ static const int kFontSize = 14.0f;
     
     UITextView *textView = (UITextView *)[_containerView viewWithTag:kTagTextView];
     textView.text = [preText substringToIndex:MIN(self.maxUnitCount * self.unitCharCount, [preText length])];
+    [self textViewDidChange:textView];
     
     [self reveal];
 }
@@ -191,12 +197,14 @@ static const int kFontSize = 14.0f;
     
     [[[UIApplication sharedApplication] keyWindow] addSubview:_coverView];
     
-    _coverView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
-
+    _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.0f];
+    _containerView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
+    
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3f];
     
-    _coverView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+    _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6f];
+    _containerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
     
     [UIView commitAnimations];
     
@@ -204,14 +212,16 @@ static const int kFontSize = 14.0f;
 
 - (void)hide {
 
-    _coverView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+    _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6f];
+    _containerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
     
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.8f];
     [UIView setAnimationDelegate:_coverView];
     [UIView setAnimationDidStopSelector:@selector(removeFromSuperview)];
     
-    _coverView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
+    _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.0f];
+    _containerView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
     
     [UIView commitAnimations];
 
@@ -253,6 +263,55 @@ static const int kFontSize = 14.0f;
     }
 }
 
+- (int)charCountOfString:(NSString *)string {
+    int count = 0;
+    for (int i = 0; i < [string length]; i++)
+    {
+        unichar c = [string characterAtIndex:i];
+        if (isblank(c) || isascii(c))
+        {
+            count++;
+        }
+        else
+        {
+            count += 2;
+        }
+    }
+    return count;
+}
+
+- (NSString *)trimString:(NSString *)string toCharCount:(int)charCount {
+    
+    int curCharCount = [self charCountOfString:string];
+    
+    NSString *trimedStr = string;
+    
+    if (curCharCount > charCount)
+    {
+        int delta = curCharCount - charCount;
+        for (int i = [string length] - 1; i >= 0; i--)
+        {
+            unichar c = [string characterAtIndex:i];
+            if (isblank(c) || isascii(c))
+            {
+                delta--;
+            }
+            else
+            {
+                delta -= 2;
+            }
+            if (delta <= 0)
+            {
+                trimedStr = [string substringToIndex:i];
+                break;
+            }
+        }
+    }
+    
+    return trimedStr;
+}
+
+
 #pragma mark ShareToCNDelegate
 - (void)shareFailedWithError:(NSError *)error {
     UITextView *textView = (UITextView *)[_containerView viewWithTag:kTagTextView];
@@ -261,6 +320,7 @@ static const int kFontSize = 14.0f;
 }
 
 - (void)shareSucceed {
+    UITextView *textView = (UITextView *)[_containerView viewWithTag:kTagTextView];
     textView.text = [NSString stringWithFormat:@"%@!", NSLocalizedString(@"share_to_cn_succeed", @"")];
     [self hide];
 }
@@ -271,8 +331,14 @@ static const int kFontSize = 14.0f;
     return YES;
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    return YES;
+- (void)textViewDidChange:(UITextView *)textView {
+    
+    textView.text = [self trimString:textView.text toCharCount:(self.maxUnitCount * self.unitCharCount)];
+    
+    int unitCount = ceil((float)[self charCountOfString:textView.text]/(float)self.unitCharCount);
+    
+    UILabel *label = (UILabel *)[_containerView viewWithTag:kTagLabel];
+    label.text = [NSString stringWithFormat:@"%d", (self.maxUnitCount - unitCount)];
 }
 
 #pragma mark IBAction

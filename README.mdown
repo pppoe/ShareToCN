@@ -1,33 +1,33 @@
 # What's This
-This is designed to be a drop-to-use Weibo Share-Only Utility.
+This is designed to be a drop-to-use Weibo Share-Only Utility.  
 The first Version is done.
 
 # How to Use
 1. Drag the ShareToCN/ShareToCN/ into your Xcode Project
 1. If you just want the share-to-weibo functionality:
 
-    [ShareToCN shareText:text];
 
-    //< Or
-
-    [ShareToCN shareText:text withDelegate:delegate];
-
-    //< pass in a delegate if you want the feedback.
-
-    @protocol ShareToCNDelegate
-
-    - (void)shareFailedWithError:(NSError *)error;
-    - (void)shareSucceed;
-
-    @end
+        [ShareToCN shareText:text];
+        //< Or
+        
+        [ShareToCN shareText:text withDelegate:delegate];
+        //< pass in a delegate if you want the feedback.        
+        
+        @protocol ShareToCNDelegate
+        
+        - (void)shareFailedWithError:(NSError *)error;
+        - (void)shareSucceed;
+        
+        @end
 
 1. If you want a pop-out box to enter/edit the text:
 
-    [ShareToCNBox showWithText:text];
+
+        [ShareToCNBox showWithText:text];
+
 
 Quite easy, right?
 
 # Credits
-Thanks to JimLiu/WeiboSDK, and people who build some components I don't know where they come from, 
+Thanks to JimLiu/WeiboSDK, and people who build some components I don't know where they come from,   
 you can find their names at the top of the files.
-

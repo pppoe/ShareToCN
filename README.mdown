@@ -2,6 +2,10 @@
 This is designed to be a drop-to-use Weibo Share-Only Utility.  
 The first Version is done.
 
+# Screenshots
+[!Share Box](https://github.com/pppoe/ShareToCN/raw/master/screenshot/sharebox.png)
+
+
 # How to Use
 1. Drag the ShareToCN/ShareToCN/ into your Xcode Project
 1. If you just want the share-to-weibo functionality:

@@ -33,6 +33,7 @@
 		46B8A43413C439FE0035119F /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B8A43313C439FD0035119F /* TestViewController.m */; };
 		46B8A43613C4419B0035119F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46B8A43513C4419B0035119F /* QuartzCore.framework */; };
 		46D9635013C54A2E007C6126 /* ShareToCNBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 46D9634F13C54A2E007C6126 /* ShareToCNBox.m */; };
+		46D9635A13C58998007C6126 /* ShareToCN.strings in Resources */ = {isa = PBXBuildFile; fileRef = 46D9635913C58998007C6126 /* ShareToCN.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +88,7 @@
 		46B8A43513C4419B0035119F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		46D9634E13C54A2E007C6126 /* ShareToCNBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareToCNBox.h; sourceTree = "<group>"; };
 		46D9634F13C54A2E007C6126 /* ShareToCNBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareToCNBox.m; sourceTree = "<group>"; };
+		46D9635913C58998007C6126 /* ShareToCN.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = ShareToCN.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +167,7 @@
 				46B8A42813C42F340035119F /* ShareToCN.m */,
 				46D9634E13C54A2E007C6126 /* ShareToCNBox.h */,
 				46D9634F13C54A2E007C6126 /* ShareToCNBox.m */,
+				46D9635913C58998007C6126 /* ShareToCN.strings */,
 			);
 			path = ShareToCN;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 			files = (
 				46B8A3E513C42E7A0035119F /* InfoPlist.strings in Resources */,
 				46B8A3EE13C42E7A0035119F /* MainWindow.xib in Resources */,
+				46D9635A13C58998007C6126 /* ShareToCN.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

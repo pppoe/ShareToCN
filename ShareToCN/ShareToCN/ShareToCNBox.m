@@ -149,7 +149,7 @@ static const int kFontSize = 14.0f;
         [label release];
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [button setTitle:NSLocalizedString(@"share_to_cn_button", @"") forState:UIControlStateNormal];
+        [button setTitle:NSLocalizedStringFromTable(@"share_to_cn_button", @"ShareToCN", @"") forState:UIControlStateNormal];
         [button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
         button.frame = buttonRect;
         [_containerView addSubview:button];
@@ -315,13 +315,13 @@ static const int kFontSize = 14.0f;
 #pragma mark ShareToCNDelegate
 - (void)shareFailedWithError:(NSError *)error {
     UITextView *textView = (UITextView *)[_containerView viewWithTag:kTagTextView];
-    textView.text = [NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"share_to_cn_failed", @""), error];
+    textView.text = [NSString stringWithFormat:@"%@: %@", NSLocalizedStringFromTable(@"share_to_cn_failed", @"ShareToCN", @""), error];
     [self hide];
 }
 
 - (void)shareSucceed {
     UITextView *textView = (UITextView *)[_containerView viewWithTag:kTagTextView];
-    textView.text = [NSString stringWithFormat:@"%@!", NSLocalizedString(@"share_to_cn_succeed", @"")];
+    textView.text = [NSString stringWithFormat:@"%@!", NSLocalizedStringFromTable(@"share_to_cn_succeed", @"ShareToCN", @"")];
     [self hide];
 }
 

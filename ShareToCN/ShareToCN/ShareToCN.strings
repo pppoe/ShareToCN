@@ -1,0 +1,11 @@
+/* 
+  ShareToCN.strings
+  ShareToCN
+
+  Created by hli on 7/7/11.
+  Copyright 2011 mr.pppoe. All rights reserved.
+*/
+
+"share_to_cn_button" = "Share";
+"share_to_cn_fail" = "Share Failed: %@";
+"share_to_cn_suceed" = "Share Success";

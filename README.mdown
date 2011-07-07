@@ -3,7 +3,7 @@ This is designed to be a drop-to-use Weibo Share-Only Utility.
 The first Version is done.
 
 # Screenshots
-[!Share Box](https://github.com/pppoe/ShareToCN/raw/master/screenshot/sharebox.png)
+![Share Box](https://github.com/pppoe/ShareToCN/raw/master/screenshot/sharebox.png)
 
 
 # How to Use

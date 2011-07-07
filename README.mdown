@@ -4,27 +4,26 @@ The first Version is done.
 
 # How to Use
 1. Drag the ShareToCN/ShareToCN/ into your Xcode Project
-2. If you just want the share-to-weibo functionality: 
-    
+1. If you just want the share-to-weibo functionality:
+
     [ShareToCN shareText:text];
 
     //< Or
-    
+
     [ShareToCN shareText:text withDelegate:delegate];
 
     //< pass in a delegate if you want the feedback.
 
-    @protocol ShareToCNDelegate 
+    @protocol ShareToCNDelegate
 
     - (void)shareFailedWithError:(NSError *)error;
     - (void)shareSucceed;
 
     @end
 
-3. If you want a pop-out box to enter/edit the text:
+1. If you want a pop-out box to enter/edit the text:
 
     [ShareToCNBox showWithText:text];
-
 
 Quite easy, right?
 

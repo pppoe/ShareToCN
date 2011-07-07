@@ -7,7 +7,7 @@
 //
 
 #import "TestViewController.h"
-#import "ShareToCN.h"
+#import "ShareToCNBox.h"
 
 @implementation TestViewController
 
@@ -46,7 +46,7 @@
     
     UITextView *textView = (UITextView *)[self.view viewWithTag:100];
     
-    [ShareToCN shareText:textView.text];
+    [ShareToCNBox showWithText:textView.text];
 }
 
 - (void)viewDidLoad

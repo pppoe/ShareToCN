@@ -61,23 +61,10 @@ static ShareToCN *sharedCenter = nil;
         _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, kPadding + kBorderWidth, 
                                                                keyWindow.frame.size.width, 
                                                                keyWindow.frame.size.height - 2 * (kPadding + kBorderWidth))];
-//        _webView.layer.cornerRadius = 10.0f;
-//        _webView.clipsToBounds = YES;
         _webView.delegate = self;
         _webView.alpha = 0.0f;        
         [_containerView addSubview:_webView];
         
-//        CGSize buttonSize = CGSizeMake(30, 30);
-//        CGRect buttonRect = CGRectMake(CGRectGetMaxX(_webView.frame) - buttonSize.width, CGRectGetMinY(_webView.frame) - buttonSize.height,
-//                                       buttonSize.width, buttonSize.height);
-//        CGSize buttonSize = CGSizeMake(30, 30);
-//        CGRect buttonRect = CGRectMake(CGRectGetMidX(_webView.frame) + 8.0f, CGRectGetMaxY(_webView.frame) - 35.0f,
-//                                       128, 30);
-//        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-//        button.frame = buttonRect;
-//        [button setBackgroundColor:[[UIColor blueColor] colorWithAlphaComponent:0.4f]];
-////        [button setImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ShareToCN.bundle/X" ofType:@"png"]]
-//                                                 forState:UIControlStateNormal];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = _containerView.bounds;
         button.alpha = 0.1f;
@@ -245,7 +232,7 @@ static ShareToCN *sharedCenter = nil;
                           returningResponse:&response
                                       error:&err];
     
-    if ([(NSHTTPURLResponse *)response statusCode] < 400)
+    if (err)
     {
         //< Error Handle
         NSLog(@"Error %@", err);
@@ -356,11 +343,11 @@ static ShareToCN *sharedCenter = nil;
 }
 
 #pragma mark OAuthEngineDelegate
-//- (void) storeCachedOAuthData: (NSString *) data forUsername: (NSString *) username {
-//	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];	
-//	[defaults setObject:data forKey: @"authData"];
-//	[defaults synchronize];
-//}
+- (void) storeCachedOAuthData: (NSString *) data forUsername: (NSString *) username {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];	
+	[defaults setObject:data forKey: @"authData"];
+	[defaults synchronize];
+}
 
 - (NSString *) cachedOAuthDataForUsername: (NSString *) username {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:@"authData"];

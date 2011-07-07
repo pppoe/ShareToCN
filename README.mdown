@@ -7,10 +7,12 @@ The first Version is done.
 2. If you just want the share-to-weibo functionality: 
     
     [ShareToCN shareText:text];
-or
+
+    //< Or
+    
     [ShareToCN shareText:text withDelegate:delegate];
 
-pass in a delegate if you want the feedback.
+    //< pass in a delegate if you want the feedback.
 
     @protocol ShareToCNDelegate 
 

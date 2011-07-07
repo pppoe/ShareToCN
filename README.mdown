@@ -30,6 +30,8 @@ The first Version is done.
         [ShareToCNBox showWithText:text];
 
 
+1. Open ShareToCN.m, change to your key and secret here
+
 Quite easy, right?
 
 # Credits

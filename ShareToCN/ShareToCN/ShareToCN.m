@@ -10,6 +10,7 @@
 #import "OAuthEngine.h"
 #import "OAMutableURLRequest.h"
 #import "StringUtil.h"
+#import "ASIFormDataRequest.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -22,6 +23,7 @@
 
 //< For Sina
 #define kSinaKeyCodeLead @"获取到的授权码"
+#define kSinaPostImagePath @"http://api.t.sina.com.cn/statuses/upload.json"
 #define kSinaPostPath @"http://api.t.sina.com.cn/statuses/update.json"
 
 static ShareToCN *sharedCenter = nil;
@@ -103,23 +105,24 @@ static ShareToCN *sharedCenter = nil;
     [ShareToCN shareText:text withDelegate:nil];
 }
 
-+ (void)shareTextWithImage:(NSString *)text andImage:(UIImage *)image {
-    [ShareToCN shareTextWithImage:text andImage:image withDelegate:nil];
++ (void)shareText:(NSString *)text WithImage:(UIImage *)image {
+    [ShareToCN shareText:text WithImage:image withDelegate:nil];
 }
 
 + (void)shareText:(NSString *)text withDelegate:(id<ShareToCNDelegate>)delegate {
+    [ShareToCN shareText:text WithImage:nil withDelegate:delegate];
+}
+
++ (void)shareText:(NSString *)text WithImage:(UIImage *)image withDelegate:(id<ShareToCNDelegate>)delegate {
     ShareToCN *center = [ShareToCN center];
     center.text = text;
     center.delegate = delegate;
+    center.image = image;
     
     if ([center touchForAuth])
     {
         [center postTweet];
     }
-}
-
-+ (void)shareTextWithImage:(NSString *)text andImage:(UIImage *)image withDelegate:(id<ShareToCNDelegate>)delegate {
-    
 }
 
 @end
@@ -196,14 +199,14 @@ static ShareToCN *sharedCenter = nil;
 }
 
 - (void)postTweet {
-    NSString* path = kSinaPostPath;
+    NSString* path = (self.image ? kSinaPostImagePath : kSinaPostPath);
     NSString *postString = [NSString stringWithFormat:@"status=%@",
                             [self.text encodeAsURIComponent]];
     
     NSString *URL = (NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)path, (CFStringRef)@"%", NULL, kCFStringEncodingUTF8);
     [URL autorelease];
     NSURL *finalURL = [NSURL URLWithString:URL];
-    NSMutableURLRequest* req = [[[OAMutableURLRequest alloc] initWithURL:finalURL
+    OAMutableURLRequest* req = [[[OAMutableURLRequest alloc] initWithURL:finalURL
                                                                 consumer:_engine.consumer 
                                                                    token:_engine.accessToken 
                                                                    realm: nil
@@ -224,13 +227,30 @@ static ShareToCN *sharedCenter = nil;
     
     [req setHTTPBody:[finalBody dataUsingEncoding:NSUTF8StringEncoding]];
     NSError *err = nil;
-    NSURLResponse *response = nil;
+//    NSURLResponse *response = nil;
     
     [(OAMutableURLRequest *)req prepare];
     
-    [NSURLConnection sendSynchronousRequest:req
-                          returningResponse:&response
-                                      error:&err];
+//    [NSURLConnection sendSynchronousRequest:req
+//                          returningResponse:&response
+//                                      error:&err];
+    
+    ASIFormDataRequest *asiReq = [ASIFormDataRequest requestWithURL:[req URL]];
+    [asiReq setRequestHeaders:[NSMutableDictionary dictionaryWithCapacity:1]];
+    [asiReq.requestHeaders setDictionary:[req allHTTPHeaderFields]];
+    [asiReq setPostValue:self.text forKey:@"status"];
+    [asiReq setPostValue:_engine.consumerKey forKey:@"source"];
+    if (self.image)
+    {
+        NSData *jpegImageData = UIImageJPEGRepresentation(self.image, 1.0f);
+//        [asiReq addData:jpegImageData withFileName:@"" andContentType:@"image/jpeg" forKey:@"pic"];
+        UIImage *jpegImage = [UIImage imageWithData:jpegImageData];
+        [asiReq setPostValue:jpegImage forKey:@"pic"];
+    }
+    
+    [asiReq startSynchronous];
+    
+    err = asiReq.error;
     
     if (err)
     {

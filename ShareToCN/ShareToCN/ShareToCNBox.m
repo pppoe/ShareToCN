@@ -69,6 +69,8 @@ static const int kFontSize = 14.0f;
 
 + (ShareToCNBox *)box;
 - (void)showWithPreText:(NSString *)preText;
+- (void)showWithPreText:(NSString *)preText andImage:(UIImage *)image;
+
 - (IBAction)buttonTapped:(id)sender;
 
 - (void)reveal;
@@ -79,6 +81,9 @@ static const int kFontSize = 14.0f;
 
 - (int)charCountOfString:(NSString *)string;
 - (NSString *)trimString:(NSString *)string toCharCount:(int)charCount;
+
+- (void)setBackgroundImage:(UIImage *)image;
+- (UIImage *)backgroundImage;
 
 @end
 
@@ -91,13 +96,19 @@ static const int kFontSize = 14.0f;
     [[ShareToCNBox box] showWithPreText:text];
 }
 
++ (void)showWithText:(NSString *)text andImage:(UIImage *)image {
+    [[ShareToCNBox box] showWithPreText:text andImage:image];
+}
+
 - (id)init {
     if ((self = [super init]))
     {
         CGRect frame = CGRectMake(20, 60, 280, 200);
         
+        CGRect winBounds = [[UIApplication sharedApplication] keyWindow].bounds;
+        CGRect statusFrame = [[UIApplication sharedApplication] statusBarFrame];
         UIButton *bkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        bkButton.frame = [[UIApplication sharedApplication] keyWindow].bounds;
+        bkButton.frame = CGRectMake(0, CGRectGetMaxY(statusFrame), winBounds.size.width, winBounds.size.height - statusFrame.size.height);
         [bkButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];        
         
         _coverView = [bkButton retain];
@@ -123,6 +134,10 @@ static const int kFontSize = 14.0f;
                                        height * kUpperPartRate + (height * (1.0f - kUpperPartRate) - kButtonHeight)/2.0f, 
                                        kButtonWidth, kButtonHeight);
 
+        CGRect imageRect = CGRectMake(kHPadding, CGRectGetMaxY(frame) + kVPadding, 
+                                      textViewRect.size.width, 
+                                      winBounds.size.height - frame.size.height - kVPadding);
+        
         CALayer *shadowLayer = [CALayer layer];
         shadowLayer.frame = textViewRect;
         
@@ -154,6 +169,10 @@ static const int kFontSize = 14.0f;
         button.frame = buttonRect;
         [_containerView addSubview:button];
         
+        _imageView = [[UIImageView alloc] initWithFrame:imageRect];
+        _imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [_coverView addSubview:_imageView];
+        
         _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8f];
         [_coverView addSubview:_containerView];
     }
@@ -161,6 +180,7 @@ static const int kFontSize = 14.0f;
 }
 
 - (void)dealloc {
+    [_imageView release];
     [_coverView release];
     [_containerView release];
     [super dealloc];
@@ -179,13 +199,37 @@ static const int kFontSize = 14.0f;
     return sharedBox;
 }
 
+- (void)setBackgroundImage:(UIImage *)image {
+//    [(UIButton *)_coverView setBackgroundImage:image forState:UIControlStateNormal];
+    _imageView.image = image;
+}
+
+- (UIImage *)backgroundImage {
+//    return [(UIButton *)_coverView backgroundImageForState:UIControlStateNormal];
+    return _imageView.image;
+}
+
 - (void)showWithPreText:(NSString *)preText {
     
     UITextView *textView = (UITextView *)[_containerView viewWithTag:kTagTextView];
     textView.text = [preText substringToIndex:MIN(self.maxUnitCount * self.unitCharCount, [preText length])];
     [self textViewDidChange:textView];
+
+    [self setBackgroundImage:nil];
+
+    [self reveal];
+}
+
+- (void)showWithPreText:(NSString *)preText andImage:(UIImage *)image {
+
+    UITextView *textView = (UITextView *)[_containerView viewWithTag:kTagTextView];
+    textView.text = [preText substringToIndex:MIN(self.maxUnitCount * self.unitCharCount, [preText length])];
+    [self textViewDidChange:textView];
+        
+    [self setBackgroundImage:image];
     
     [self reveal];
+
 }
 
 - (void)reveal {
@@ -199,12 +243,13 @@ static const int kFontSize = 14.0f;
     
     _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.0f];
     _containerView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
-    
+    _imageView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3f];
     
     _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6f];
     _containerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+    _imageView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
     
     [UIView commitAnimations];
     
@@ -214,6 +259,7 @@ static const int kFontSize = 14.0f;
 
     _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6f];
     _containerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+    _imageView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
     
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.8f];
@@ -222,6 +268,7 @@ static const int kFontSize = 14.0f;
     
     _coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.0f];
     _containerView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
+    _imageView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
     
     [UIView commitAnimations];
 
@@ -346,8 +393,11 @@ static const int kFontSize = 14.0f;
     
     [self hideKeyboard];
 
+    UIImage *image = [self backgroundImage];
+    
     UITextView *textView = (UITextView *)[_containerView viewWithTag:kTagTextView];
-    [ShareToCN shareText:textView.text withDelegate:self];
+    [ShareToCN shareText:textView.text WithImage:image withDelegate:self];
+    
 }
 
 @end

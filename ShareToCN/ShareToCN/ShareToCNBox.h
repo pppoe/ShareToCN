@@ -14,6 +14,7 @@
     int _unitCharCount;
     
     //< GUI Comps
+    UIImageView *_imageView;
     UIView *_coverView;
     UIView *_containerView;
 }
@@ -22,5 +23,6 @@
 @property (nonatomic, assign) int unitCharCount;
 
 + (void)showWithText:(NSString *)text;
++ (void)showWithText:(NSString *)text andImage:(UIImage *)image;
 
 @end

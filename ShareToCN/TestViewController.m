@@ -46,6 +46,13 @@
     
     UITextView *textView = (UITextView *)[self.view viewWithTag:100];
     
+    [ShareToCNBox showWithText:textView.text andImage:[UIImage imageNamed:@"sharebox"]];
+}
+
+- (void)shareText {
+    
+    UITextView *textView = (UITextView *)[self.view viewWithTag:100];
+    
     [ShareToCNBox showWithText:textView.text];
 }
 
@@ -53,12 +60,18 @@
 {
     [super viewDidLoad];
     
-    UIBarButtonItem *composeItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
+    UIBarButtonItem *composeItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera
                                                                                target:self
                                                                                action:@selector(shareAll)];
     self.navigationItem.rightBarButtonItem = composeItem;
     [composeItem release];
-    
+
+    UIBarButtonItem *textItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks
+                                                                                 target:self
+                                                                                 action:@selector(shareText)];
+    self.navigationItem.leftBarButtonItem = textItem;
+    [textItem release];
+
     UITextView *textView = [[UITextView alloc] initWithFrame:self.view.bounds];
     textView.tag = 100;
     textView.editable = NO;

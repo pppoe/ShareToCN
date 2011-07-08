@@ -38,9 +38,9 @@
 @property (nonatomic, assign) id<ShareToCNDelegate> delegate;
 
 + (void)shareText:(NSString *)text;
-+ (void)shareTextWithImage:(NSString *)text andImage:(UIImage *)image;
++ (void)shareText:(NSString *)text WithImage:(UIImage *)image;
 
 + (void)shareText:(NSString *)text withDelegate:(id<ShareToCNDelegate>)delegate;
-+ (void)shareTextWithImage:(NSString *)text andImage:(UIImage *)image withDelegate:(id<ShareToCNDelegate>)delegate;
++ (void)shareText:(NSString *)text WithImage:(UIImage *)image withDelegate:(id<ShareToCNDelegate>)delegate;
 
 @end

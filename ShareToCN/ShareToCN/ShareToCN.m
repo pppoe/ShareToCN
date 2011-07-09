@@ -199,7 +199,9 @@ static ShareToCN *sharedCenter = nil;
 }
 
 - (void)postTweet {
+    
     NSString* path = (self.image ? kSinaPostImagePath : kSinaPostPath);
+    
     NSString *postString = [NSString stringWithFormat:@"status=%@",
                             [self.text encodeAsURIComponent]];
     
@@ -213,27 +215,17 @@ static ShareToCN *sharedCenter = nil;
                                                        signatureProvider:nil] autorelease];
     [req setHTTPMethod:@"POST"];
     [req setHTTPShouldHandleCookies:NO];
-    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     
-    int contentLength = [postString lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+    NSString *textBody = [NSString stringWithString:postString];
+    textBody = [textBody stringByAppendingString:[NSString stringWithFormat:@"%@source=%@", 
+                                                  (postString) ? @"&" : @"?" , 
+                                                  _engine.consumerKey]];
     
-    [req setValue:[NSString stringWithFormat:@"%d", contentLength] forHTTPHeaderField:@"Content-Length"];
-    
-    NSString *finalBody = [NSString stringWithString:@""];
-    finalBody = [finalBody stringByAppendingString:postString];
-    finalBody = [finalBody stringByAppendingString:[NSString stringWithFormat:@"%@source=%@", 
-                                                    (postString) ? @"&" : @"?" , 
-                                                    _engine.consumerKey]];
-    
-    [req setHTTPBody:[finalBody dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:[textBody dataUsingEncoding:NSUTF8StringEncoding]];
+
     NSError *err = nil;
-//    NSURLResponse *response = nil;
     
     [(OAMutableURLRequest *)req prepare];
-    
-//    [NSURLConnection sendSynchronousRequest:req
-//                          returningResponse:&response
-//                                      error:&err];
     
     ASIFormDataRequest *asiReq = [ASIFormDataRequest requestWithURL:[req URL]];
     [asiReq setRequestHeaders:[NSMutableDictionary dictionaryWithCapacity:1]];
@@ -243,9 +235,7 @@ static ShareToCN *sharedCenter = nil;
     if (self.image)
     {
         NSData *jpegImageData = UIImageJPEGRepresentation(self.image, 1.0f);
-//        [asiReq addData:jpegImageData withFileName:@"" andContentType:@"image/jpeg" forKey:@"pic"];
-        UIImage *jpegImage = [UIImage imageWithData:jpegImageData];
-        [asiReq setPostValue:jpegImage forKey:@"pic"];
+        [asiReq addData:jpegImageData withFileName:@"image.jpeg" andContentType:@"image/jpeg" forKey:@"pic"];
     }
     
     [asiReq startSynchronous];

@@ -1,10 +1,10 @@
 # What's This
 This is designed to be a drop-to-use Weibo Share-Only Utility.  
 The first Version is done.
+It will let you share text either with image or not to your Weibo.
 
 # Screenshots
 ![Share Box](https://github.com/pppoe/ShareToCN/raw/master/screenshot/sharebox.png)
-
 
 # How to Use
 1. Drag the ShareToCN/ShareToCN/ into your Xcode Project
@@ -13,9 +13,12 @@ The first Version is done.
 
         [ShareToCN shareText:text];
         //< Or
-        
+        [ShareToCN shareText:text WithImage:image];
+
+        //< or pass in a delegate if you want the feedback.        
         [ShareToCN shareText:text withDelegate:delegate];
-        //< pass in a delegate if you want the feedback.        
+        //< or
+        [ShareToCN shareText:text WithImage:image withDelegate:delegate];
         
         @protocol ShareToCNDelegate
         
@@ -28,9 +31,10 @@ The first Version is done.
 
 
         [ShareToCNBox showWithText:text];
+        [ShareToCNBox showWithText:text andImage:image];
 
 
-1. Open ShareToCN.m, change to your key and secret here
+1. Open ShareToCN.m, change to your key and secret here, all of the code is in ShareToCNBox.m/h, it is easy for you to customize.
 
 Quite easy, right?
 
